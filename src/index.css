@@ -1,40 +1,105 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 2rem;
-
-  position: relative;
-
-  color: rgba(2, 2, 2, 0.87);
-  background-color: #fff;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-header {
-  background-color: #d9d9d9;
-  position: static;
-  width: 100%;
-  top: 1rex;
-  justify-content: space-between;
-  border-radius: 6px;
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
 }
 
-article {
-  max-width: 1280px;
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 10px 15px;
+  background-color: var(--btn-bg);
+  color: var(--btn-text);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+button:hover {
+  background-color: var(--btn-hover-bg);
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+a:hover {
+  color: var(--link-hover-color);
+}
+
+.container {
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  padding: 20px;
 }
 
-div #box {
-  text-align: center;
-  margin: 50px auto;
-  width: 800px;
-  height: 400px;
-  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
-  background-color: #d9d9d9;
-  border-radius: 6px;
-  position: static;
-  width: 100%;
-  top: 1rex;
-  justify-content: space-between;
-  text-align: left;
-} 
+.crypto-item {
+  background-color: var(--item-bg);
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+}
+
+.crypto-item h2 {
+  font-size: 1.25rem;
+}
+
+.crypto-item p {
+  margin: 10px 0;
+  font-size: 1rem;
+}
+
+.crypto-item button {
+  margin-top: 10px;
+}
+
+.dark-mode-toggle {
+  margin: 20px 0;
+  padding: 10px;
+  cursor: pointer;
+  background-color: var(--toggle-bg);
+  color: var(--toggle-text);
+  border-radius: 5px;
+}
+
+/* Variáveis para temas claro e escuro */
+:root {
+  --bg-color: #f0f0f0;
+  --text-color: #333;
+  --item-bg: #fff;
+  --btn-bg: #007bff;
+  --btn-text: #fff;
+  --btn-hover-bg: #0056b3;
+  --link-color: #007bff;
+  --link-hover-color: #0056b3;
+  --toggle-bg: #007bff;
+  --toggle-text: #fff;
+}
+
+body.dark-mode {
+  --bg-color: #121212;
+  --text-color: #e0e0e0;
+  --item-bg: #1e1e1e;
+  --btn-bg: #bb86fc;
+  --btn-text: #121212;
+  --btn-hover-bg: #985eff;
+  --link-color: #bb86fc;
+  --link-hover-color: #985eff;
+  --toggle-bg: #bb86fc;
+  --toggle-text: #121212;
+}

@@ -3,7 +3,6 @@ import { usebest } from '../context/FavoritesContext';
 import CryptoItem from './CryptoItem';
 import { requi } from '../hooks/requi';
 
-
 const best: React.FC = () => {
   const { favorites } = usebest();
   const { cryptos, loading, error } = requi();
@@ -14,7 +13,7 @@ const best: React.FC = () => {
   const favoriteCryptos = cryptos.filter((crypto) => favorites.includes(crypto.id));
 
   return (
-    <div>
+    <div id='favoritos'>
       <h1>Favoritos</h1>
       {favoriteCryptos.length > 0 ? (
         favoriteCryptos.map((crypto) => <CryptoItem key={crypto.id} crypto={crypto} />)

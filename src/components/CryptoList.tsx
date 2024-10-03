@@ -18,7 +18,7 @@ const CryptoList: React.FC = () => {
 
         <div id='box'>
           <thead>
-            <tr id='let'>
+            <tr>
               <th>Nome</th>
               <th>Preço</th>
               <th>Variação (24h)</th>
@@ -26,8 +26,12 @@ const CryptoList: React.FC = () => {
           </thead>
 
           <tbody>
-            {cryptos.map((coin: { id: React.Key | null | undefined; name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; current_price: number; price_change_percentage_24h: number; }) => (
-              <tr id='let' key={coin.id}>
+            {cryptos.map((coin: { id: React.Key | null | undefined;
+             name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>>
+              | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; 
+              current_price: number; price_change_percentage_24h: number; 
+            }) => (
+              <tr key={coin.id}>
                 <td>
                     <Link to={`/details/${coin.id}`}>{coin.name}</Link>
                 </td>

@@ -1,36 +1,47 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import axios from 'axios';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 
+// Registra os componentes necessários do Chart.js
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 interface PriceData {
-  prices: [number, number][];
+  prices: Array<[number, number]>; // [timestamp, price]
 }
 
-const CryptoDetails: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+const CryptoDetail: React.FC = () => {
+  const { id } = useParams<{ id: string }>(); // Obter ID da criptomoeda a partir da URL
   const [priceData, setPriceData] = useState<PriceData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPriceData = async () => {
       try {
-        const response = await axios.get<PriceData>(
-          `https://api.coingecko.com/api/v3/coins/${id}/market_chart`, 
+        const response = await axios.get(
+          `https://api.coingecko.com/api/v3/coins/${id}/market_chart`,
           {
             params: {
               vs_currency: 'usd',
-              days: '7',
+              days: '7', // Variação dos últimos 7 dias
             },
           }
         );
         setPriceData(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Erro ao buscar dados de preço:', error);
+      } catch (err) {
+        setError('Erro ao buscar dados do gráfico');
+      } finally {
         setLoading(false);
       }
     };
@@ -38,36 +49,74 @@ const CryptoDetails: React.FC = () => {
     fetchPriceData();
   }, [id]);
 
-  if (loading) {
-    return <p>Carregando dados da criptomoeda...</p>;
-  }
+  if (loading) return <div>Carregando gráfico...</div>;
+  if (error) return <div>{error}</div>;
 
-  if (!priceData) {
-    return <p>Erro ao carregar dados.</p>;
-  }
-
+  // Preparar os dados para o Chart.js
   const chartData = {
-    labels: priceData.prices.map((price) => {
+    labels: priceData?.prices.map((price) => {
       const date = new Date(price[0]);
-      return `${date.getDate()}/${date.getMonth() + 1} ${date.getHours()}:00`;
+      return `${date.getDate()}/${date.getMonth() + 1}`;
     }),
     datasets: [
       {
         label: 'Preço (USD)',
-        data: priceData.prices.map((price) => price[1]),
+        data: priceData?.prices.map((price) => price[1]),
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderWidth: 2,
+        pointRadius: 1,
         fill: true,
       },
     ],
   };
 
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top' as const,
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context: any) {
+            return `$${context.raw.toFixed(2)}`;
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Dias',
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Preço (USD)',
+        },
+        ticks: {
+          callback: function (value: string | number) {
+            // O Chart.js espera que o callback possa lidar com ambos string e number
+            if (typeof value === 'number') {
+              return `$${value}`;
+            }
+            return value;
+          },
+        },
+      },
+    },
+  };  
+
   return (
     <div>
-      <h1>Detalhes da Criptomoeda</h1>
-      <Line data={chartData} />
+      <h2>Gráfico de Preço (últimos 7 dias)</h2>
+      <Line data={chartData} options={options} />
     </div>
   );
 };
 
-export default CryptoDetails;
+export default CryptoDetail;
