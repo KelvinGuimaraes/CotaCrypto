@@ -38,6 +38,7 @@ const CryptoDetail: React.FC = () => {
             },
           }
         );
+        console.log(response.data); // Verificar se os dados estão sendo retornados corretamente
         setPriceData(response.data);
       } catch (err) {
         setError('Erro ao buscar dados do gráfico');
@@ -45,23 +46,28 @@ const CryptoDetail: React.FC = () => {
         setLoading(false);
       }
     };
-
+  
     fetchPriceData();
-  }, [id]);
+  }, [id]);  
 
   if (loading) return <div>Carregando gráfico...</div>;
   if (error) return <div>{error}</div>;
 
+  // Verificar se priceData existe antes de renderizar o gráfico
+  if (!priceData || !priceData.prices) {
+    return <div>Dados do gráfico não disponíveis</div>;
+  }
+
   // Preparar os dados para o Chart.js
   const chartData = {
-    labels: priceData?.prices.map((price) => {
+    labels: priceData.prices.map((price) => {
       const date = new Date(price[0]);
-      return `${date.getDate()}/${date.getMonth() + 1}`;
+      return `${date.getDate()}/${date.getMonth() + 1}`; // Exibe o dia e mês
     }),
     datasets: [
       {
         label: 'Preço (USD)',
-        data: priceData?.prices.map((price) => price[1]),
+        data: priceData.prices.map((price) => price[1]), // Extrai o preço
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         borderWidth: 2,
@@ -99,8 +105,7 @@ const CryptoDetail: React.FC = () => {
           text: 'Preço (USD)',
         },
         ticks: {
-          callback: function (value: string | number) {
-            // O Chart.js espera que o callback possa lidar com ambos string e number
+          callback: function (value: number | string) {
             if (typeof value === 'number') {
               return `$${value}`;
             }
